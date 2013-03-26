@@ -437,7 +437,6 @@ static int __init arch_timer_common_register(void)
 	err = local_timer_register(&arch_timer_ops);
 	if (err)
 		goto out_free_irq;
-	percpu_timer_setup();
 
 	return 0;
 
