@@ -34,6 +34,10 @@
 static char klog_buf[256];
 #endif
 
+#ifndef CONFIG_LOGCAT_SIZE
+#define CONFIG_LOGCAT_SIZE 256
+#endif
+
 static unsigned int log_suspended = 0;
 static unsigned int log_always = 0;
 
@@ -776,10 +780,10 @@ static struct logger_log VAR = { \
 	.size = SIZE, \
 };
 
-DEFINE_LOGGER_DEVICE(log_main, LOGGER_LOG_MAIN, LOGGER_1MB_SIZE)
-DEFINE_LOGGER_DEVICE(log_events, LOGGER_LOG_EVENTS, LOGGER_512KB_SIZE)
-DEFINE_LOGGER_DEVICE(log_radio, LOGGER_LOG_RADIO, LOGGER_2MB_SIZE)
-DEFINE_LOGGER_DEVICE(log_system, LOGGER_LOG_SYSTEM, LOGGER_512KB_SIZE)
+DEFINE_LOGGER_DEVICE(log_main, LOGGER_LOG_MAIN, CONFIG_LOGCAT_SIZE*1024)
+DEFINE_LOGGER_DEVICE(log_events, LOGGER_LOG_EVENTS, CONFIG_LOGCAT_SIZE*1024)
+DEFINE_LOGGER_DEVICE(log_radio, LOGGER_LOG_RADIO, CONFIG_LOGCAT_SIZE*1024)
+DEFINE_LOGGER_DEVICE(log_system, LOGGER_LOG_SYSTEM, CONFIG_LOGCAT_SIZE*1024)
 
 static struct logger_log *get_log_from_minor(int minor)
 {
