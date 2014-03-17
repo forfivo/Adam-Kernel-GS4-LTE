@@ -34,7 +34,7 @@
 static char klog_buf[256];
 #endif
 
-static unsigned int log_enabled = 1;
+static unsigned int log_suspended = 0;
 static unsigned int log_always = 0;
 
 module_param(log_always, uint, S_IWUSR | S_IRUGO);
@@ -472,14 +472,14 @@ static ssize_t do_write_log_from_user(struct logger_log *log,
 
 static void log_early_suspend(struct early_suspend *handler)
 {
-	if (log_enabled)
-		log_enabled = 0;
+	if (log_suspended == 0)
+		log_suspended = 1;
 }
 
 static void log_late_resume(struct early_suspend *handler)
 {
-	if (!log_enabled)
-		log_enabled = 1;
+	if (log_suspended == 1)
+		log_suspended = 0;
 }
 
 static struct early_suspend log_suspend = {
@@ -501,8 +501,11 @@ ssize_t logger_aio_write(struct kiocb *iocb, const struct iovec *iov,
 	struct timespec now;
 	ssize_t ret = 0;
 
-	if (!log_enabled && !log_always)
-		return 0;
+	if (log_suspended == 1) 
+		return;
+
+	if ((log_suspended == 0) && (log_always == 0))
+		return;
 
 	now = current_kernel_time();
 
