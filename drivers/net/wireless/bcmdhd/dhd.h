@@ -66,7 +66,7 @@ int setScheduler(struct task_struct *p, int policy, struct sched_param *param);
 
 #if defined(KEEP_ALIVE)
 /* Default KEEP_ALIVE Period is 55 sec to prevent AP from sending Keep Alive probe frame */
-#define KEEP_ALIVE_PERIOD 55000
+#define KEEP_ALIVE_PERIOD 28000
 #define NULL_PKT_STR	"null_pkt"
 #endif /* KEEP_ALIVE */
 /* Forward decls */
@@ -780,8 +780,8 @@ extern uint dhd_sdiod_drive_strength;
 
 /* Override to force tx queueing all the time */
 extern uint dhd_force_tx_queueing;
-/* Default KEEP_ALIVE Period is 55 sec to prevent AP from sending Keep Alive probe frame */
-#define DEFAULT_KEEP_ALIVE_VALUE 	55000 /* msec */
+/* Default KEEP_ALIVE Period is 28 sec to prevent AP from sending Keep Alive probe frame */
+#define DEFAULT_KEEP_ALIVE_VALUE 	28000 /* msec */
 #ifndef CUSTOM_KEEP_ALIVE_SETTING
 #define CUSTOM_KEEP_ALIVE_SETTING 	DEFAULT_KEEP_ALIVE_VALUE
 #endif /* DEFAULT_KEEP_ALIVE_VALUE */
