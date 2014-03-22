@@ -24,7 +24,7 @@
 
 #define LIST_SIZE			5
 #define MAX_DATA_COPY_TRY		2
-#define WAKE_LOCK_TIMEOUT		(3*HZ)
+#define WAKE_LOCK_TIMEOUT		(HZ/3)
 #define COMPLETION_TIMEOUT		(2*HZ)
 #define DATA				REL_RX
 #define LARGE_DATA			REL_RY

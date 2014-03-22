@@ -291,7 +291,7 @@ static void devalarm_triggered(struct devalarm *alarm)
 	pr_alarm(INT, "devalarm_triggered type %d\n", alarm->type);
 	spin_lock_irqsave(&alarm_slock, flags);
 	if (alarm_enabled & alarm_type_mask) {
-		wake_lock_timeout(&alarm_wake_lock, 5 * HZ);
+		wake_lock_timeout(&alarm_wake_lock, HZ / 5);
 		alarm_enabled &= ~alarm_type_mask;
 		alarm_pending |= alarm_type_mask;
 		wake_up(&alarm_wait_queue);

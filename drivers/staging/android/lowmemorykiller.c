@@ -30,6 +30,8 @@
  *
  */
 
+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/mm.h>
@@ -39,6 +41,7 @@
 #include <linux/notifier.h>
 #include <linux/memory.h>
 #include <linux/memory_hotplug.h>
+#include <linux/earlysuspend.h>
 #include <linux/ratelimit.h>
 
 #ifdef CONFIG_RUNTIME_COMPCACHE
@@ -69,28 +72,49 @@ static uint32_t oom_count = 0;
 #define OOM_DEPTH 7
 #endif
 
-static uint32_t lowmem_debug_level = 1;
+static uint32_t lowmem_debug_level = 0;
+static uint32_t lowmem_auto_oom = 1;
 static int lowmem_adj[6] = {
 	0,
-	1,
-	6,
+	2,
+	4,
+	9,
 	12,
+	15,
 };
-static int lowmem_adj_size = 4;
+static int lowmem_adj_size = 6;
 static int lowmem_minfree[6] = {
 	3 * 512,	/* 6MB */
 	2 * 1024,	/* 8MB */
 	4 * 1024,	/* 16MB */
+	12 * 1024,	/* 49MB */
 	16 * 1024,	/* 64MB */
+	20 * 1024,	/* 128MB */
 };
-static int lowmem_minfree_size = 4;
+static int lowmem_minfree_screen_off[6] = {
+	3 * 512,	/* 6MB */
+	2 * 1024,	/* 8MB */
+	4 * 1024,	/* 16MB */
+	12 * 1024,	/* 49MB */
+	16 * 1024,	/* 64MB */
+	20 * 1024,	/* 128MB */
+};
+static int lowmem_minfree_screen_on[6] = {
+	3 * 512,	/* 6MB */
+	2 * 1024,	/* 8MB */
+	4 * 1024,	/* 16MB */
+	12 * 1024,	/* 49MB */
+	16 * 1024,	/* 64MB */
+	20 * 1024,	/* 128MB */
+};
+static int lowmem_minfree_size = 6;
 
 static unsigned long lowmem_deathpending_timeout;
 
 #define lowmem_print(level, x...)			\
 	do {						\
 		if (lowmem_debug_level >= (level))	\
-			printk(x);			\
+			pr_info(x);			\
 	} while (0)
 
 static bool avoid_to_kill(uid_t uid)
@@ -397,6 +421,25 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 	return rem;
 }
 
+static void low_mem_early_suspend(struct early_suspend *handler)
+{
+	if (lowmem_auto_oom) {
+		memcpy(lowmem_minfree_screen_on, lowmem_minfree, sizeof(lowmem_minfree));
+		memcpy(lowmem_minfree, lowmem_minfree_screen_off, sizeof(lowmem_minfree_screen_off));
+	}
+}
+
+static void low_mem_late_resume(struct early_suspend *handler)
+{
+	if (lowmem_auto_oom)
+		memcpy(lowmem_minfree, lowmem_minfree_screen_on, sizeof(lowmem_minfree_screen_on));
+}
+
+static struct early_suspend low_mem_suspend = {
+	.suspend = low_mem_early_suspend,
+	.resume = low_mem_late_resume,
+};
+
 /*
  * CONFIG_SEC_OOM_KILLER : klaatu@sec
  *
@@ -580,6 +623,7 @@ static struct shrinker lowmem_shrinker = {
 
 static int __init lowmem_init(void)
 {
+	register_early_suspend(&low_mem_suspend);
 	register_shrinker(&lowmem_shrinker);
 #ifdef CONFIG_SEC_OOM_KILLER
 	register_oom_notifier(&android_oom_notifier);
@@ -683,6 +727,10 @@ module_param_array_named(adj, lowmem_adj, int, &lowmem_adj_size,
 #endif
 module_param_array_named(minfree, lowmem_minfree, uint, &lowmem_minfree_size,
 			 S_IRUGO | S_IWUSR);
+module_param_array_named(minfree_screen_off, lowmem_minfree_screen_off, uint, &lowmem_minfree_size,
+			 S_IRUGO | S_IWUSR);
+module_param_array_named(minfree_screen_on, lowmem_minfree_screen_on, uint, &lowmem_minfree_size,
+			S_IRUGO | S_IWUSR);
 module_param_named(debug_level, lowmem_debug_level, uint, S_IRUGO | S_IWUSR);
 #ifdef LMK_COUNT_READ
 module_param_named(lmkcount, lmk_count, uint, S_IRUGO);
