@@ -4765,42 +4765,10 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 #endif /* ARP_OFFLOAD_SUPPORT */
 
 #ifdef PKT_FILTER_SUPPORT
-	/* Setup default defintions for pktfilter , enable in suspend */
+	/* Setup defintions for pktfilter , enable in suspend */
 	dhd->pktfilter_count = 1;
-	/* Setup filter to allow only unicast */
-	dhd->pktfilter[DHD_UNICAST_FILTER_NUM] = "100 0 0 0 0x01 0x00";
-	dhd->pktfilter[DHD_BROADCAST_FILTER_NUM] = NULL;
-	dhd->pktfilter[DHD_MULTICAST4_FILTER_NUM] = NULL;
-	dhd->pktfilter[DHD_MULTICAST6_FILTER_NUM] = NULL;
-	/* Add filter to pass multicastDNS packet and NOT filter out as Broadcast */
-	dhd->pktfilter[DHD_MDNS_FILTER_NUM] = "104 0 0 0 0xFFFFFFFFFFFF 0x01005E0000FB";
-	/* apply APP pktfilter */
-	dhd->pktfilter[DHD_ARP_FILTER_NUM] = "105 0 0 12 0xFFFF 0x0806";
-
-#ifdef CUSTOMER_HW4
-#ifdef GAN_LITE_NAT_KEEPALIVE_FILTER
-	dhd->pktfilter_count = 4;
-	/* Setup filter to block broadcast and NAT Keepalive packets */
-	/* discard all broadcast packets */
-	dhd->pktfilter[DHD_UNICAST_FILTER_NUM] = "100 0 0 0 0xffffff 0xffffff";
-	/* discard NAT Keepalive packets */
-	dhd->pktfilter[DHD_BROADCAST_FILTER_NUM] = "102 0 0 36 0xffffffff 0x11940009";
-	/* discard NAT Keepalive packets */
-	dhd->pktfilter[DHD_MULTICAST4_FILTER_NUM] = "104 0 0 38 0xffffffff 0x11940009";
-	dhd->pktfilter[DHD_MULTICAST6_FILTER_NUM] = NULL;
-#else
-#ifdef BLOCK_IPV6_PACKET
-	/* Setup filter to allow only IPv4 unicast frames */
-	dhd->pktfilter[DHD_UNICAST_FILTER_NUM] = "100 0 0 0 "
-		HEX_PREF_STR UNI_FILTER_STR ZERO_ADDR_STR ETHER_TYPE_STR IPV6_FILTER_STR
-		" "
-		HEX_PREF_STR ZERO_ADDR_STR ZERO_ADDR_STR ETHER_TYPE_STR ZERO_TYPE_STR;
-#endif /* BLOCK_IPV6_PACKET */
-#ifdef PASS_IPV4_SUSPEND
-	dhd->pktfilter[DHD_MDNS_FILTER_NUM] = "104 0 0 0 0xFFFFFF 0x01005E";
-#endif /* PASS_IPV4_SUSPEND */
-#endif /* GAN_LITE_NAT_KEEPALIVE_FILTER */
-#endif /* CUSTOMER_HW4 */
+	/* Setup filter to allow unicast only */
+	dhd->pktfilter[0] = "100 0 0 0 0x01 0x00";
 
 #if defined(SOFTAP)
 	if (ap_fw_loaded) {
