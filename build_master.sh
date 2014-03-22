@@ -16,7 +16,7 @@ export PACKAGEDIR=$PARENT_DIR/Packages/$PLATFORM
 export USE_SEC_FIPS_MODE=true
 export ARCH=arm
 #export CROSS_COMPILE=/home/gm/Documentos/android_prebuilt_toolchains-master/arm-linux-androideabi-4.7/bin/arm-linux-androideabi-
-export CROSS_COMPILE=/home/gm/Documentos/linaro_toolchains_2014/arm-cortex_a15-linux-gnueabihf-linaro_4.7.4-2014.01/bin/arm-cortex_a15-linux-gnueabihf-
+export CROSS_COMPILE=../linaro_toolchains_2014/arm-cortex_a15-linux-gnueabihf-linaro_4.7.4-2014.01/bin/arm-cortex_a15-linux-gnueabihf-
 export KERNEL_CONFIG=forfivo_defconfig;
 
 time_start=$(date +%s.%N)
