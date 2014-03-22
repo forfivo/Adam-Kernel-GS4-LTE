@@ -172,14 +172,7 @@ config ARCH_MSM8960
 	select MSM_KRAIT_WFE_FIXUP
 	select MSM_IOMMU_GPU_SYNC
 	select MSM_CPU_PWRCTL
-<<<<<<< HEAD
-=======
-	select GENERIC_TIME_VSYSCALL
-	select USE_USER_ACCESSIBLE_TIMERS
-	select ARM_USE_USER_ACCESSIBLE_TIMERS
-	select MSM_USE_USER_ACCESSIBLE_TIMERS
 	select HAS_MACH_MEMUTILS	
->>>>>>> 06826a1... msm: memutils: memcpy, memmove, copy_page optimization
 
 config ARCH_MSM8930
 	bool "MSM8930"
@@ -244,16 +237,8 @@ config ARCH_APQ8064
 	select SPARSEMEM_ALLOC_MEM_MAP_TOGETHER if SPARSEMEM
 	select MSM_IOMMU_GPU_SYNC
 	select MSM_CPU_PWRCTL
-<<<<<<< HEAD
-
-=======
-	select GENERIC_TIME_VSYSCALL
-	select USE_USER_ACCESSIBLE_TIMERS
-	select ARM_USE_USER_ACCESSIBLE_TIMERS
-	select MSM_USE_USER_ACCESSIBLE_TIMERS
 	select HAS_MACH_MEMUTILS
 	
->>>>>>> 06826a1... msm: memutils: memcpy, memmove, copy_page optimization
 config ARCH_MSM8974
 	bool "MSM8974"
 	select ARCH_MSM_KRAITMP
@@ -3045,42 +3030,10 @@ config SEC_FACTORY
 	default n
 	help
 	  Enable Features only For FACTORY BINARY.
-<<<<<<< HEAD
-=======
-
-config MSM_USE_USER_ACCESSIBLE_TIMERS
-	bool "Enables mapping an MSM timer counter page to user space."
-	depends on ARM_USE_USER_ACCESSIBLE_TIMERS
-	help
-	  Enables MSM-specific user accessible timers via a shared
-	  memory page containing the cycle counter.
-
-config FORCE_FAST_CHARGE
-	bool "Force fast charging (AC/USB) by Yank555.lu"
-	default n
-	help
-	  A simple sysfs interface to force adapters that
-	  are detected as USB to charge as AC (1A/h) or to set
-	  custom charging currents for AC and USB.
-
-config UPDATE_LCDC_LUT
-	bool "Set initial Qualcomm LCDC lut"
-	default n
-	help
-	  Set initial Qualcomm LCDC Look Up Table.
-
-config LCD_KCAL
-	tristate "MSM generic LCDC Calibration"
-	default n
-	help
-	  Enable MSM generic LCDC temperature Calibration.
 
 config HAS_MACH_MEMUTILS
 	default n
 	bool "Motorola MSM memcpy enhancements"
 	help
 	Faster memcpy performance for Krait
-
-	  
->>>>>>> 06826a1... msm: memutils: memcpy, memmove, copy_page optimization
 endif
