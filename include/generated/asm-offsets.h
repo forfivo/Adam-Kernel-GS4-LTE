@@ -55,7 +55,7 @@
 
 #define SYS_ERROR0 10420224 /* 0x9f0000	@ */
 
-#define SIZEOF_MACHINE_DESC 72 /* sizeof(struct machine_desc)	@ */
+#define SIZEOF_MACHINE_DESC 76 /* sizeof(struct machine_desc)	@ */
 #define MACHINFO_TYPE 0 /* offsetof(struct machine_desc, nr)	@ */
 #define MACHINFO_NAME 4 /* offsetof(struct machine_desc, name)	@ */
 
